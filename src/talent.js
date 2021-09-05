@@ -45,19 +45,30 @@ class Talent {
     talentRandom(include) {
         // 1000, 100, 10, 1
         const talentList = {};
+        var staticTopList = [];
         for(const talentId in this.#talents) {
             const { id, grade, name, description } = this.#talents[talentId];
+            console.log('ttttttttt:'+id+' '+grade+' '+name);
             if(id == include) {
+                console.log('qqqqqqqqq:'+id+' '+grade+' '+name);
                 include = { grade, name, description, id };
                 continue;
             }
+
+            if(id == '1131' || id == '1004' || id == '1005'){
+                console.log('add static talent id='+id)
+                staticTopList.push({ grade, name, description, id });
+                continue;
+            }
+
             if(!talentList[grade]) talentList[grade] = [{ grade, name, description, id }];
             else talentList[grade].push({ grade, name, description, id });
         }
 
-        return new Array(10)
+        var arr = new Array(10)
             .fill(1).map((v, i)=>{
                 if(!i && include) return include;
+
                 const gradeRandom = Math.random();
                 let grade;
                 if(gradeRandom>=0.111) grade = 0;
@@ -72,6 +83,13 @@ class Talent {
                 const random = Math.floor(Math.random()*length) % length;
                 return talentList[grade].splice(random,1)[0];
             });
+        
+            console.log('staticTopList.length:'+staticTopList.length);
+            console.log('staticTopList:'+staticTopList);
+        arr[0] = staticTopList[0];
+        arr[1] = staticTopList[1];
+        arr[2] = staticTopList[2];
+        return arr;
     }
 
     allocationAddition(talents) {

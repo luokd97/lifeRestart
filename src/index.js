@@ -9,6 +9,5 @@ window.hideBanners = (e) => {
         .querySelectorAll(".banner.visible")
         .forEach((b) => b.classList.remove("visible"));
 };
-
 const app = new App();
 app.initial();
