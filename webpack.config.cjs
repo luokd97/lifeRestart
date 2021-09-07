@@ -5,6 +5,8 @@ module.exports = {
   entry: './src/index.js',
   devtool: 'eval-cheap-module-source-map',
   devServer: {
+    host:'127.0.0.1',
+    port:8088,
     static: [
       {
         directory: path.join(__dirname, 'data'),
