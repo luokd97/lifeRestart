@@ -2,15 +2,15 @@ import { clone } from './functions/util.js';
 import { checkCondition } from './functions/condition.js';
 
 class Talent {
-    constructor() {}
+    constructor() { }
 
     #talents;
 
-    initial({talents}) {
+    initial({ talents }) {
         this.#talents = talents;
-        for(const id in talents) {
+        for (const id in talents) {
             const talent = talents[id];
-            talent.id= Number(id);
+            talent.id = Number(id);
             talent.grade = Number(talent.grade);
         }
     }
@@ -22,7 +22,7 @@ class Talent {
 
     get(talentId) {
         const talent = this.#talents[talentId];
-        if(!talent) throw new Error(`[ERROR] No Talent[${talentId}]`);
+        if (!talent) throw new Error(`[ERROR] No Talent[${talentId}]`);
         return clone(talent);
     }
 
@@ -33,10 +33,10 @@ class Talent {
 
     exclusive(talends, exclusiveId) {
         const { exclusive } = this.get(exclusiveId);
-        if(!exclusive) return null;
-        for(const talent of talends) {
-            for(const e of exclusive) {
-                if(talent == e) return talent;
+        if (!exclusive) return null;
+        for (const talent of talends) {
+            for (const e of exclusive) {
+                if (talent == e) return talent;
             }
         }
         return null;
@@ -46,56 +46,58 @@ class Talent {
         // 1000, 100, 10, 1
         const talentList = {};
         var staticTopList = [];
-        for(const talentId in this.#talents) {
+        var s = new Set([1131, 1004, 1005, 1048, 1065, 1128]);
+        console.log('ssssssss=' + s.toJSON);
+        for (const talentId in this.#talents) {
             const { id, grade, name, description } = this.#talents[talentId];
-            console.log('ttttttttt:'+id+' '+grade+' '+name);
-            if(id == include) {
-                console.log('qqqqqqqqq:'+id+' '+grade+' '+name);
+            console.log('ttttttttt:' + id + ' ' + grade + ' ' + name);
+            if (id == include) {
+                console.log('qqqqqqqqq:' + id + ' ' + grade + ' ' + name);
                 include = { grade, name, description, id };
                 continue;
             }
 
-            if(id == '1131' || id == '1004' || id == '1005'){
-                console.log('add static talent id='+id)
+            if (s.has(id)) {
+                console.log('add static talent id=' + id)
                 staticTopList.push({ grade, name, description, id });
                 continue;
             }
 
-            if(!talentList[grade]) talentList[grade] = [{ grade, name, description, id }];
+            if (!talentList[grade]) talentList[grade] = [{ grade, name, description, id }];
             else talentList[grade].push({ grade, name, description, id });
         }
 
         var arr = new Array(10)
-            .fill(1).map((v, i)=>{
-                if(!i && include) return include;
+            .fill(1).map((v, i) => {
+                if (!i && include) return include;
 
                 const gradeRandom = Math.random();
                 let grade;
-                if(gradeRandom>=0.111) grade = 0;
-                else if(gradeRandom>=0.011) grade = 1;
-                else if(gradeRandom>=0.001) grade = 2;
+                if (gradeRandom >= 0.111) grade = 0;
+                else if (gradeRandom >= 0.011) grade = 1;
+                else if (gradeRandom >= 0.001) grade = 2;
                 else grade = 3;
 
-                while(talentList[grade].length == 0) grade--;
+                while (talentList[grade].length == 0) grade--;
 
                 const length = talentList[grade].length;
 
-                const random = Math.floor(Math.random()*length) % length;
-                return talentList[grade].splice(random,1)[0];
+                const random = Math.floor(Math.random() * length) % length;
+                return talentList[grade].splice(random, 1)[0];
             });
-        
-            console.log('staticTopList.length:'+staticTopList.length);
-            console.log('staticTopList:'+staticTopList);
-        arr[0] = staticTopList[0];
-        arr[1] = staticTopList[1];
-        arr[2] = staticTopList[2];
+
+        console.log('staticTopList.length:' + staticTopList.length);
+        console.log('staticTopList:' + staticTopList);
+        for(let i = 0;i<staticTopList.length;i++){
+            arr[i] = staticTopList[i];
+        }
         return arr;
     }
 
     allocationAddition(talents) {
-        if(Array.isArray(talents)) {
+        if (Array.isArray(talents)) {
             let addition = 0;
-            for(const talent of talents)
+            for (const talent of talents)
                 addition += this.allocationAddition(talent);
             return addition;
         }
@@ -104,7 +106,7 @@ class Talent {
 
     do(talentId, property) {
         const { effect, condition, grade, name, description } = this.get(talentId);
-        if(condition && !checkCondition(property, condition))
+        if (condition && !checkCondition(property, condition))
             return null;
         return { effect, grade, name, description };
     }
